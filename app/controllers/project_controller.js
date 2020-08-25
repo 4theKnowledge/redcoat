@@ -17,7 +17,7 @@ module.exports.index = function(req, res) {
     else {
       res.render('projects', { title: "Projects" })
     }
-  });  
+  });
 }
 
 // A function that returns all the projects of a user.
@@ -32,9 +32,6 @@ module.exports.getProjects = function(req, res) {
     }
   });
 }
-
-
-
 
 // The tagging interface.
 module.exports.tagging = function(req, res) {
@@ -52,7 +49,7 @@ module.exports.tagging = function(req, res) {
       proj.getDocumentGroupsPerUser(function(err, docGroupsPerUser) {
         if(err) { res.send("error"); }
         //console.log(canCreateNewCategories, canDeleteCategories, ">>>>>>>>>>>>>");
-        res.render('tagging', { 
+        res.render('tagging', {
          projectName: proj.project_name,
          tagging: true,
          title: "Annotation Interface",
@@ -66,15 +63,8 @@ module.exports.tagging = function(req, res) {
 
     });
 
-
-
-
   });
 }
-
-
-
-
 
 // Automatically tag all tokens on the screen that appear in the dictionary.
 function runDictionaryTagging(documentGroup, dictionary) {
@@ -92,7 +82,7 @@ function runDictionaryTagging(documentGroup, dictionary) {
 
     labeledTokens = new Array(doc.length);
     for(var x = i; x < labeledTokens.length; x++) {
-      labeledTokens[x] = 0;              
+      labeledTokens[x] = 0;
     }
 
 
@@ -103,7 +93,7 @@ function runDictionaryTagging(documentGroup, dictionary) {
 
         if(dictionary.hasOwnProperty(ngram)) {
           console.log(ngram, "is in the dictionary! Class:", dictionary[ngram])
-          
+
           var start = i;
           var end = i + ngram_size;
           alreadyLabeled = false;
@@ -116,32 +106,21 @@ function runDictionaryTagging(documentGroup, dictionary) {
           if(!alreadyLabeled) {
             anns.push({start: start, end: end, labels: dictionary[ngram]});
             for(var x = i; x < end; x++) {
-              labeledTokens[x] = 1;              
+              labeledTokens[x] = 1;
             }
           }
         }
-
-
-        //console.log('ngram:', ngram)
       }
 
     }
     automaticAnnotations.push(anns);
 
-    
   }
 
   console.log("Automatic annotations:", automaticAnnotations)
 
   return automaticAnnotations;
 }
-
-
-
-
-
-
-
 
 // Retrieve a single document group for the tagging interface.
 module.exports.getDocumentGroup = function(req, res) {
@@ -152,15 +131,13 @@ module.exports.getDocumentGroup = function(req, res) {
     }
 
     proj.recommendDocgroupToUser(req.user, function(err, docgroup) {
-      //console.log(err, docgroup)
 
-      
       if(err) {
         if(err.message == "No document groups left") {
           return res.send("tagging complete");
         }
         return res.send("error");
-      } else {     
+      } else {
 
         logger.debug("Sending doc group id: " + docgroup._id)
 
@@ -172,11 +149,11 @@ module.exports.getDocumentGroup = function(req, res) {
               automaticTaggingDictionary: proj.automatic_tagging_dictionary,
               entityClasses: proj.category_hierarchy,
               annotatedDocGroups: annotatedDocGroups,
-              pageTitle: "Annotating group: \"" + (docgroup.display_name || "UnnamedGroup") + "\""          
+              pageTitle: "Annotating group: \"" + (docgroup.display_name || "UnnamedGroup") + "\""
           });
         });
       }
-      
+
     });
   });
 }
@@ -187,28 +164,31 @@ module.exports.submitAnnotations = function(req, res) {
   var userId = req.user._id;
   var projectId = req.params.id;
   var labels = req.body.labels;
+  var events = req.body.events;
+  // var annotationTime = req.body.annotationTime;
+  var pageTime = req.body.pageTime;
+  var confidences = req.body.confidences;
 
-  console.log("Labels", labels)
+  // console.log("Labels", labels)
 
   var documentGroupAnnotation = new DocumentGroupAnnotation({
     user_id: userId,
     document_group_id: documentGroupId,
     labels: labels,
+    events: events,
+    // annotation_time: annotationTime,
+    page_time: pageTime,
+    confidences: confidences,
   });
   documentGroupAnnotation.save(function(err, dga) {
 
-    
     if(err) {
       logger.error(err.stack);
       return res.send({error: err})
     }
-    
+
     // Add the docgroup to the user's docgroups_annotated array.
-
-    //console.log(dga._id)
     User.findByIdAndUpdate(userId, { $addToSet: { 'docgroups_annotated': documentGroupId }}, function(err) {
-      //console.log(req.user);
-
         if(err) {
           logger.error(err.stack);
           res.send({error: err})
@@ -223,7 +203,7 @@ module.exports.submitAnnotations = function(req, res) {
             res.send({success: true});
 
           });
-        } 
+        }
     });
   });
 }
@@ -233,8 +213,6 @@ module.exports.downloadAnnotationsOfUser = function(req, res) {
   var proj_id = req.params.id;
   var user_id = req.params.user_id;
 
-  
-
   User.findById(user_id, function(err, user) {
     console.log(user)
     Project.findById(proj_id, function(err, proj) {
@@ -243,7 +221,7 @@ module.exports.downloadAnnotationsOfUser = function(req, res) {
         return res.send("error");
       }
       proj.getAnnotationsOfUserForProject(user, function(err, annotations) {
-        proj.getEntityTypingAnnotations(annotations, function(err, et_annotations) {          
+        proj.getEntityTypingAnnotations(annotations, function(err, et_annotations) {
           if(err) { return res.send("error"); }
 
           res.type('.json');
@@ -255,7 +233,7 @@ module.exports.downloadAnnotationsOfUser = function(req, res) {
           }
           res.send(out.join('\n'));
           //res.send(annotations);
-        });        
+        });
       })
     });
   });
@@ -267,7 +245,7 @@ module.exports.downloadCombinedAnnotations = function(req, res) {
     console.log(err);
     proj.getCombinedAnnotations(function(err, annotations) {
       if(err) return res.send(err);
-      proj.getEntityTypingAnnotations(annotations, function(err, et_annotations) {   
+      proj.getEntityTypingAnnotations(annotations, function(err, et_annotations) {
         if(err) return res.send(err);
         res.type('.txt');
         res.setHeader('Content-type', "application/octet-stream");
@@ -283,7 +261,6 @@ module.exports.downloadCombinedAnnotations = function(req, res) {
 
 }
 
-
 // AJAX function to retrieve details of a project (annotators, metrics).
 module.exports.getProjectDetails = function(req, res) {
   var id = req.params.id;
@@ -298,14 +275,12 @@ module.exports.getProjectDetails = function(req, res) {
           annotations: annotations,
           combined_annotations_available: annotationsAvailable,
           project_id: proj._id
-        });   
-      }); 
+        });
+      });
     });
-   
+
   });
 }
-
-
 
 module.exports.acceptInvitation = function(req, res) {
   var invitation_id = req.params.id;
@@ -318,13 +293,13 @@ module.exports.acceptInvitation = function(req, res) {
     invitation.acceptInvitation(function(err) {
       if(err) { return res.send("error"); }
       res.send({success: true});
-    });    
+    });
   });
 
 
   }, 1)
-  
-  
+
+
 }
 
 module.exports.declineInvitation = function(req, res) {
@@ -338,15 +313,12 @@ module.exports.declineInvitation = function(req, res) {
     invitation.declineInvitation(function(err) {
       if(err) { return res.send("error"); }
       res.send({success: true});
-    });    
+    });
   });
 
 
   }, 1)
 }
-
-
-
 
 module.exports.modifyHierarchy = function(req, res) {
   var project_id = req.params.id;
@@ -363,4 +335,3 @@ module.exports.modifyHierarchy = function(req, res) {
     //res.status(400).send({});
   //}, 1000)
 }
-

@@ -6,21 +6,16 @@ var Schema = mongoose.Schema;
 
 var cf = require("./common/common_functions.js")
 
-
 /* Validation */
-
-var labelsValidation =  
+var labelsValidation =
   [
     { validator: cf.validateDocumentCountMin,       msg: '{PATH}: Need at least '        + 1 + ' set of annotations in group.'},
     { validator: cf.validateDocumentCountMax,       msg: '{PATH}: exceeds the limit of ' + cf.DOCUMENT_MAXCOUNT + ' sets of annotations in group.' },
     //{ validator: cf.validateLabelAbbreviationLengthMin,  msg: 'Label cannot be empty.'},
     //{ validator: cf.validateLabelAbbreviationLengthMax, msg: 'All labels in document must be less than ' + cf.ABBREVIATION_MAXLENGTH + ' characters long.'},
-  ] 
-
+  ]
 
 /* Schema */
-
-
 var DocumentGroupAnnotationSchema = new Schema({
   user_id: {
     type: Schema.Types.ObjectId,
@@ -36,20 +31,30 @@ var DocumentGroupAnnotationSchema = new Schema({
     type: String,
     ref: 'Project',
   },
-  labels: { 
+  labels: {
     type: [[ ]],
     validate: labelsValidation
   },
-
+  events: {
+    type: [[ ]],
+  },
+  // annotation_time: {
+  //   type: Number,
+  // },
+  page_time: {
+    type: Number,
+  },
+  confidences: {
+    type: [[ ]],
+  },
 }, {
-  timestamps: { 
+  timestamps: {
     createdAt: "created_at",
     updatedAt: "updated_at"
   }
 });
 
 /* Common methods */
-
 DocumentGroupAnnotationSchema.methods.verifyAssociatedExists = cf.verifyAssociatedExists;
 
 DocumentGroupAnnotationSchema.methods.setProjectId = function(done) {
@@ -62,8 +67,6 @@ DocumentGroupAnnotationSchema.methods.setProjectId = function(done) {
 }
 
 /* Label pre-save hook */
-
-
 
 // Verifies that the labels in the document group annotation are valid.
 // This is to ensure that even if the user modifies the client-side Javascript, they can't possibly save an
@@ -103,16 +106,6 @@ DocumentGroupAnnotationSchema.methods.verifyLabelsAreValid = function(done) {
   function verifyLabelsAreInProjectValidLabels(t, proj) {
 
     var valid_labels = new Set(proj.category_hierarchy);
-    //valid_labels.add("O");
-
-    //var valid_abbreviations = new Set(proj.valid_labels.map(value => value.abbreviation));
-    //valid_abbreviations.add("O"); // Add the outside category
-
-
-
-
-    // var merged_labels = Array.from(new Set([].concat.apply(Array.from(new Set([].concat.apply([], t.labels))))));
-
     var merged_labels = new Set();
 
     for(var i = 0; i < t.labels.length; i++) {
@@ -120,11 +113,11 @@ DocumentGroupAnnotationSchema.methods.verifyLabelsAreValid = function(done) {
         if(t.labels[i][j][1] !== undefined) {
           for(var k = 0; k < t.labels[i][j][1].length; k++) {
             merged_labels.add(t.labels[i][j][1][k])
-          }          
+          }
         }
       }
     }
-   
+
     merged_labels = Array.from(merged_labels);
     for(var i = 0; i < merged_labels.length; i++) {
       var label = merged_labels[i];
@@ -132,7 +125,7 @@ DocumentGroupAnnotationSchema.methods.verifyLabelsAreValid = function(done) {
         return new Error("Label \"" + merged_labels[i] + "\" is not a valid label for the project." )
       }
     }
-    return null; // no error   
+    return null; // no error
   }
 
   var Project = require('./project');
@@ -159,7 +152,7 @@ DocumentGroupAnnotationSchema.methods.verifyLabelsAreValid = function(done) {
 DocumentGroupAnnotationSchema.methods.verifyUserIdListedInProjectUserIds = function(done) {
   var t = this;
   var Project = require('./project');
-  var DocumentGroup = require('./document_group');  
+  var DocumentGroup = require('./document_group');
   DocumentGroup.findById(t.document_group_id, function(err, doc_group) {
     if(err) { done(err); return; }
     Project.findById(doc_group.project_id, function(err, proj) {
@@ -167,10 +160,10 @@ DocumentGroupAnnotationSchema.methods.verifyUserIdListedInProjectUserIds = funct
       if(!proj.projectHasUser(t.user_id)) {
         e = new Error("Project's user_ids must include user_id.");
         e.name = "UserNotInProjectError";
-        done(e);        
-      } else { 
+        done(e);
+      } else {
         done(); return;
-       }   
+       }
     });
   });
 }
@@ -189,8 +182,6 @@ DocumentGroupAnnotationSchema.methods.updateProjectNumDocumentGroupAnnotations =
 DocumentGroupAnnotationSchema.pre('save', function(next) {
   var t = this;
 
-  
-
   // 1. Verify associated user exists
   var User = require('./user');
   t.verifyAssociatedExists(User, t.user_id, function(err) {
@@ -206,18 +197,18 @@ DocumentGroupAnnotationSchema.pre('save', function(next) {
       t.setProjectId(function(err){
         if(err) { next(err); return; }
 
-   
-        // 4. Verify labels are valid labels according to this object's project      
+
+        // 4. Verify labels are valid labels according to this object's project
         t.verifyLabelsAreValid(function(err) {
           if(err) { next(err); return; }
 
           // 5. Verify user_id of this doc group is in the project's users array
-          t.verifyUserIdListedInProjectUserIds(function(err) {          
+          t.verifyUserIdListedInProjectUserIds(function(err) {
             if(err) { next(err); return; }
             next(err);
 
-          });        
-        }); 
+          });
+        });
       });
     });
   });
@@ -228,13 +219,11 @@ DocumentGroupAnnotationSchema.post('save', function(obj) {
 
   // 1. Update the number of annotations of the project.
   t.updateProjectNumDocumentGroupAnnotations(function(err) {
-    
+
   });
 })
 
-
 /* Model */
-
 var DocumentGroupAnnotation = mongoose.model('DocumentGroupAnnotation', DocumentGroupAnnotationSchema);
 
 module.exports = DocumentGroupAnnotation;

@@ -88,7 +88,7 @@
 	}
 }
 #sentence-tagging .sentence .word, #sentence-tagging .sentence .punctuation {
-	background: none;	
+	background: none;
 	position: relative;
 	word-wrap: normal;
 	display: inline-block;
@@ -147,7 +147,7 @@
 		font-size: 12px;
 		color: rgba(0, 0, 0, 0.15);
 		font-family: FontAwesome;
-		
+
 	}
 	&.tag-begin .label {
 		cursor: pointer;
@@ -224,7 +224,7 @@
 	//border-bottom: 2px solid rgba(0, 0, 0, 0.3);
 	content: " ";
 
-	
+
 	//border-right: 2px solid rgba(0, 0, 0, 0);
 }
 #sentence-tagging .sentence .word.selected::before {
@@ -256,7 +256,7 @@
 	left: 0;
 	position: absolute;
 	z-index: -1;
-	
+
 	font-size: 10px;
 	line-height: 125px;
 	font-weight: bold;
@@ -270,14 +270,14 @@
 	//background: #eaeaea;
 }
 #sentence-tagging .sentence .word.selected::after {
-	border: 2px solid rgba(0, 0, 0, 0.15);	
+	border: 2px solid rgba(0, 0, 0, 0.15);
 	//height: calc(100% - 2px);
 }
 #sentence-tagging .sentence .word.selected.tag::after {
 	top: 1px;
 	//height: calc(100% - 2px);
 	line-height: 120px;
-	border: none;	
+	border: none;
 }
 // #sentence-tagging .sentence .word.selected:not(.tag)::after {
 // 	animation: animatedBackground 20s linear infinite;
@@ -304,7 +304,7 @@
 }
 
 #sentence-tagging .sentence:last-child.selected {
-	
+
 //	&:after {
 //		position: absolute;
 //		top: 140%;
@@ -353,8 +353,8 @@
 // nav#navbar .navbar-left {
 // 	position: absolute;
 // 	right: 0;
-// 	left: 0;	
-// 	width: 20%;			
+// 	left: 0;
+// 	width: 20%;
 // 	margin-left: 12px;
 // }
 #logo {
@@ -364,10 +364,10 @@
 // nav#navbar .navbar-right {
 // 	position: absolute;
 // 	right: 0;
-// 	top: 0;	
+// 	top: 0;
 // 	margin-top: 5px;
-// 	margin-right: 8px;	
-// 	/*width: 190px;	*/	
+// 	margin-right: 8px;
+// 	/*width: 190px;	*/
 // }
 // nav#navbar .navbar-right input, nav#navbar .navbar-right button {
 // 	height: 36px;
@@ -376,7 +376,7 @@
 button#save-to-file {
 	box-sizing: border-box;
 	cursor: pointer;
-	text-align: center;	
+	text-align: center;
 	margin-left: 10px;
 }
 
@@ -387,7 +387,7 @@ input#jump-to-batch {
 }
 button#jump-to-batch-go {
 	width: 40px;
-	text-align: center;	
+	text-align: center;
 	cursor: pointer;
 
 }
@@ -403,8 +403,8 @@ nav#hotkeys {
 
 /* $color-list: #99FFCC, #FFCCCC, #CCCCFF, #CCFF99, #CCFFCC, #CCFFFF, #FFCC99, #FFCCFF, #FFFF99, #FFFFCC, #CCCC99, #fbafff, #ffbfaf, #c6ffcb;  */
 
-#sentence-counter, #saving-notification, #loading-notification, #ending-notification {			
-	
+#sentence-counter, #saving-notification, #loading-notification, #ending-notification {
+
 	text-align: center;
 	font-size: 16px;
 	color: #555;
@@ -501,7 +501,7 @@ span.punctuation::-moz-selection {
 	top: 7%;
 	transition: none;
 	z-index: 100001;
-	
+
 	.full-width {
 		width: 100%;
 		padding-top: 70px;
@@ -559,7 +559,7 @@ span.punctuation::-moz-selection {
 		.unsaved {
 			display: none;
 			color: #555;
-		}		
+		}
 		.saved {
 			display: none;
 			color: darken($primary-green, 5);
@@ -576,11 +576,11 @@ span.punctuation::-moz-selection {
 }
 
 button.blue-button {
-	
+
 	margin: 0 10px;
 	border: 2px solid #ddd;
 	background: #eee;
-	
+
 	cursor: pointer;
 	transition: none;
 	&:not(.grey-first) {
@@ -669,7 +669,7 @@ button.blue-button {
 			cursor: pointer;
 		}
 	}
-	input {		
+	input {
 		width: 100%;
 		margin: 0;
 	}
@@ -692,8 +692,8 @@ button.blue-button {
 		border-bottom: 1px solid #ddd;
 		font-size: 0.8em;
 		margin-bottom: 20px;
-		background: #f6f6f6;	
-		padding-bottom: 0;	
+		background: #f6f6f6;
+		padding-bottom: 0;
 		padding-top: 0;
 
 		button#wikipedia-hide-show {
@@ -741,7 +741,7 @@ button.blue-button {
 			.different {
 				color: $primary-blue;
 			}
-			
+
 		}
 		span.more {
 			&.show {
@@ -764,8 +764,8 @@ button.blue-button {
 					margin-left: 2px;
 				}
 			}
-			
-			
+
+
 			a {
 				color: $primary-blue;
 				text-decoration: none;
@@ -852,7 +852,7 @@ a#untag-tokens {
 				// 	content: "\f068";
 				// 	margin-right: 7px;
 				// 	font-size: 0.9em;
-				// }	
+				// }
 				&:hover {
 					background: #e2e2e2;
 				}
@@ -886,7 +886,7 @@ a#untag-tokens {
 					//transition: opacity 0.2s ease;
 					opacity: 0;
 					pointer-events: none;
-					background: #fafafa;				
+					background: #fafafa;
 				}
 				span.no-label {
 					opacity: 1;
@@ -920,7 +920,7 @@ a#untag-tokens {
 
 		}
 	}
-	
+
 	a {
 		color: #333;
 		text-decoration: none;
@@ -980,7 +980,7 @@ a#untag-tokens {
 		}
 	}
 
-	
+
 	input {
 		width: auto;
 	}
@@ -990,7 +990,7 @@ a#untag-tokens {
 		}
 		p.filtered {
 			display: block;
-		}	
+		}
 		input {
 			width: 80%;
 		}
@@ -1014,7 +1014,7 @@ a#untag-tokens {
 		min-width: 1.1em;
 		//transition: opacity 0.2s ease;
 		pointer-events: none;
-		background: #fafafa;	
+		background: #fafafa;
 	}
 	// .button-container {
 	// 	margin-top: 10px;
@@ -1102,9 +1102,65 @@ a#untag-tokens {
 			font-size: 14px;
 			margin-top: -4px;
 
-		}	
+		}
 	}
 }
 
+// Styles for confidence buttons
+.btn {
+  background-color: #EFEFEF;
+  border: none;
+  color: white;
+  padding: 4px 8px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 20px;
+  margin: 4px 2px;
+	width: 60px;
+  transition-duration: 0.4s;
+  cursor: pointer;
+	margin-bottom: 40px;
+	border-radius: 4px;
+}
 
+.cLow {
+  background-color: #EFEFEF;
+  color: black;
+  border: 2px solid #d7191c;
+}
 
+.btn.cLow.activeBtn, .cLow:hover {
+  background-color: #d7191c;
+  color: black;
+	border: 2px solid #a81315;
+}
+
+.cMed {
+  background-color: #EFEFEF;
+  color: black;
+  border: 2px solid #fdae61;
+}
+
+.btn.cMed.activeBtn, .cMed:hover {
+  background-color: #fdae61;
+  color: black;
+  border: 2px solid #d69351;
+}
+
+.cHigh {
+  background-color: #EFEFEF;
+  color: black;
+  border: 2px solid #abdda4;
+}
+
+.btn.cHigh.activeBtn, .cHigh:hover {
+  background-color: #abdda4;
+  color: black;
+	border: 2px solid #8eb888;
+}
+
+.confidence-btns {
+	display: inline-block;
+	float: right;
+}
